@@ -203,7 +203,7 @@ const Timer = () => {
           className="flex flex-col items-center"
         >
           <h1 className="mb-4 text-4xl font-bold tracking-widest text-transparent uppercase bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 drop-shadow-lg">
-            Dumb Shell Arts
+            Dumb Shell Arts Timer
           </h1>
           <h2 className="mb-8 font-mono tracking-wider text-transparent text-7xl sm:text-8xl md:text-9xl drop-shadow-2xl bg-clip-text bg-gradient-to-r from-white to-gray-300">
             {formatTime(timeLeft)}

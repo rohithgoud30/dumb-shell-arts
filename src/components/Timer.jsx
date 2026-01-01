@@ -26,6 +26,7 @@ const Timer = () => {
   const audio1Min = useRef(new Audio("/1_min_alert.mp3"));
   const audio30Sec = useRef(new Audio("/30_sec_alert.mp3"));
   const timesUpAudio = useRef(new Audio("/time_is_up.mp3")); // Final alert sound
+  const startAudio = useRef(new Audio("/start.mp3")); // Start timer sound
 
   // Initialize audio mute state
   useEffect(() => {
@@ -33,6 +34,7 @@ const Timer = () => {
     audio1Min.current.muted = isMuted;
     audio30Sec.current.muted = isMuted;
     timesUpAudio.current.muted = isMuted;
+    startAudio.current.muted = isMuted;
   }, [isMuted]);
 
   // Preload audio on user interaction
@@ -41,6 +43,7 @@ const Timer = () => {
     audio1Min.current.load();
     audio30Sec.current.load();
     timesUpAudio.current.load();
+    startAudio.current.load();
   };
 
   // Toggle mute state
@@ -50,6 +53,7 @@ const Timer = () => {
     audio1Min.current.muted = !isMuted;
     audio30Sec.current.muted = !isMuted;
     timesUpAudio.current.muted = !isMuted;
+    startAudio.current.muted = !isMuted;
   };
 
   // Format time into MM:SS
@@ -99,6 +103,12 @@ const Timer = () => {
   // Start or resume timer
   const startTimer = () => {
     preloadAudio(); // Preload audio when starting the timer
+
+    // Play start audio if not muted and not already running (fresh start or resume)
+    if (!isMuted) {
+      playAudio(startAudio);
+    }
+
     setIsRunning(true);
     setIsPaused(false);
 
@@ -205,7 +215,7 @@ const Timer = () => {
           <h1 className="mb-4 text-2xl font-bold tracking-widest text-center text-transparent uppercase sm:text-4xl bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 drop-shadow-lg">
             Dumb Shell Arts Timer
           </h1>
-          <h2 className="mb-8 font-mono tracking-wider text-transparent text-6xl sm:text-8xl md:text-9xl drop-shadow-2xl bg-clip-text bg-gradient-to-r from-white to-gray-300">
+          <h2 className="mb-8 font-mono text-6xl tracking-wider text-transparent sm:text-8xl md:text-9xl drop-shadow-2xl bg-clip-text bg-gradient-to-r from-white to-gray-300">
             {formatTime(timeLeft)}
           </h2>
 

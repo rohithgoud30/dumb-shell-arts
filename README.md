@@ -85,6 +85,7 @@ PresentationTimer/
 │   ├── 2_min_alert.mp3    # Audio for 2-minute alert
 │   ├── 30_sec_alert.mp3   # Audio for 30-second alert
 │   ├── time_is_up.mp3     # Audio for Time's Up alert
+│   ├── start.mp3          # Audio for Start Timer
 │   └── vite.svg           # Vite logo
 ├── src/                   # Source files
 │   ├── components/        # Timer component

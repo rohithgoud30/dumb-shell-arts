@@ -1,173 +1,163 @@
-import { useState, useRef, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import {
-  FaPlay,
-  FaPause,
-  FaRedo,
-  FaPlayCircle,
-  FaVolumeMute,
-  FaVolumeUp,
-} from 'react-icons/fa'
+import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { FaPlay, FaPause, FaRedo, FaPlayCircle, FaVolumeMute, FaVolumeUp } from "react-icons/fa";
 
 const Timer = () => {
-  const hash = window.location.hash
+  const hash = window.location.hash;
 
   // Dynamically set the initial timer duration based on the path
-  const initialTime = hash === '#/test' ? 5 * 61 : 8 * 60
+  const initialTime = hash === "#/test" ? 5 * 61 : 3 * 60;
 
   // State management
-  const [timeLeft, setTimeLeft] = useState(initialTime) // Use dynamic initial time
-  const [isRunning, setIsRunning] = useState(false)
-  const [isPaused, setIsPaused] = useState(false)
-  const [showMessage, setShowMessage] = useState(false)
-  const [message, setMessage] = useState('')
-  const [backgroundWhite, setBackgroundWhite] = useState(false)
-  const [isMuted, setIsMuted] = useState(false)
+  const [timeLeft, setTimeLeft] = useState(initialTime); // Use dynamic initial time
+  const [isRunning, setIsRunning] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const [showMessage, setShowMessage] = useState(false);
+  const [message, setMessage] = useState("");
+  const [backgroundWhite, setBackgroundWhite] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
 
   // Refs for timer and message timeouts
-  const timerRef = useRef(null)
-  const messageTimeoutRef = useRef(null)
+  const timerRef = useRef(null);
+  const messageTimeoutRef = useRef(null);
 
   // Audio refs for alerts
-  const audio5 = useRef(new Audio('./5_min_alert.mp3'))
-  const audio3 = useRef(new Audio('./3_min_alert.mp3'))
-  const audio1 = useRef(new Audio('./1_min_alert.mp3'))
-  const timesUpAudio = useRef(new Audio('./times_up.mp3')) // Final alert sound
+  const audio2Min = useRef(new Audio("./2_min_alert.mp3"));
+  const audio1Min = useRef(new Audio("./1_min_alert.mp3"));
+  const audio30Sec = useRef(new Audio("./30_sec_alert.mp3"));
+  const timesUpAudio = useRef(new Audio("./time_is_up.mp3")); // Final alert sound
 
   // Initialize audio mute state
   useEffect(() => {
-    audio5.current.muted = isMuted
-    audio3.current.muted = isMuted
-    audio1.current.muted = isMuted
-    timesUpAudio.current.muted = isMuted
-  }, [isMuted])
+    audio2Min.current.muted = isMuted;
+    audio1Min.current.muted = isMuted;
+    audio30Sec.current.muted = isMuted;
+    timesUpAudio.current.muted = isMuted;
+  }, [isMuted]);
 
   // Preload audio on user interaction
   const preloadAudio = () => {
-    audio5.current.load()
-    audio3.current.load()
-    audio1.current.load()
-    timesUpAudio.current.load()
-  }
+    audio2Min.current.load();
+    audio1Min.current.load();
+    audio30Sec.current.load();
+    timesUpAudio.current.load();
+  };
 
   // Toggle mute state
   const toggleMute = () => {
-    setIsMuted(!isMuted)
-    audio5.current.muted = !isMuted
-    audio3.current.muted = !isMuted
-    audio1.current.muted = !isMuted
-    timesUpAudio.current.muted = !isMuted
-  }
+    setIsMuted(!isMuted);
+    audio2Min.current.muted = !isMuted;
+    audio1Min.current.muted = !isMuted;
+    audio30Sec.current.muted = !isMuted;
+    timesUpAudio.current.muted = !isMuted;
+  };
 
   // Format time into MM:SS
   const formatTime = (seconds) => {
-    const minutes = Math.floor(seconds / 60)
-    const secs = seconds % 60
-    return `${String(minutes).padStart(2, '0')}:${String(secs).padStart(
-      2,
-      '0'
-    )}`
-  }
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+  };
 
   // Clear all timeouts
   const clearAllTimeouts = () => {
     if (messageTimeoutRef.current) {
-      clearTimeout(messageTimeoutRef.current)
-      messageTimeoutRef.current = null
+      clearTimeout(messageTimeoutRef.current);
+      messageTimeoutRef.current = null;
     }
-  }
+  };
 
   // Play audio with user interaction compliance
   const playAudio = (audioRef) => {
-    const playPromise = audioRef.current.play()
+    const playPromise = audioRef.current.play();
     if (playPromise !== undefined) {
       playPromise.catch((error) => {
-        console.warn('Audio playback failed:', error)
-      })
+        console.warn("Audio playback failed:", error);
+      });
     }
-  }
+  };
 
   // Handle checkpoint alerts
   const triggerCheckpoint = (msg, audio) => {
-    clearAllTimeouts()
-    setShowMessage(true)
-    setMessage(msg)
-    setBackgroundWhite(true)
+    clearAllTimeouts();
+    setShowMessage(true);
+    setMessage(msg);
+    setBackgroundWhite(true);
 
     if (!isMuted) {
-      playAudio(audio)
+      playAudio(audio);
     }
 
     // Reset after 5 seconds
     messageTimeoutRef.current = setTimeout(() => {
-      setShowMessage(false)
-      setMessage('')
-      setBackgroundWhite(false)
-    }, 5000)
-  }
+      setShowMessage(false);
+      setMessage("");
+      setBackgroundWhite(false);
+    }, 5000);
+  };
 
   // Start or resume timer
   const startTimer = () => {
-    preloadAudio() // Preload audio when starting the timer
-    setIsRunning(true)
-    setIsPaused(false)
+    preloadAudio(); // Preload audio when starting the timer
+    setIsRunning(true);
+    setIsPaused(false);
 
     timerRef.current = setInterval(() => {
       setTimeLeft((prev) => {
-        const nextTime = prev - 1
+        const nextTime = prev - 1;
 
-        if (nextTime === 300) triggerCheckpoint('5 MINUTES REMAINING', audio5)
-        if (nextTime === 180) triggerCheckpoint('3 MINUTES REMAINING', audio3)
-        if (nextTime === 60) triggerCheckpoint('1 MINUTE REMAINING', audio1)
+        if (nextTime === 120) triggerCheckpoint("2 MINUTES REMAINING", audio2Min);
+        if (nextTime === 60) triggerCheckpoint("1 MINUTE REMAINING", audio1Min);
+        if (nextTime === 30) triggerCheckpoint("30 SECONDS REMAINING", audio30Sec);
 
         if (nextTime <= 0) {
-          clearInterval(timerRef.current)
-          setIsRunning(false)
-          triggerCheckpoint("TIME'S UP!", timesUpAudio) // Final alert
-          return 0
+          clearInterval(timerRef.current);
+          setIsRunning(false);
+          triggerCheckpoint("TIME'S UP!", timesUpAudio); // Final alert
+          return 0;
         }
-        return nextTime
-      })
-    }, 1000)
-  }
+        return nextTime;
+      });
+    }, 1000);
+  };
 
   // Pause timer
   const pauseTimer = () => {
-    clearInterval(timerRef.current)
-    setIsRunning(false)
-    setIsPaused(true)
-  }
+    clearInterval(timerRef.current);
+    setIsRunning(false);
+    setIsPaused(true);
+  };
 
   // Reset timer
   const resetTimer = () => {
-    clearInterval(timerRef.current)
-    clearAllTimeouts()
-    setTimeLeft(initialTime) // Reset to initial time based on URL
-    setIsRunning(false)
-    setIsPaused(false)
-    setShowMessage(false)
-    setBackgroundWhite(false)
-    setMessage('')
-  }
+    clearInterval(timerRef.current);
+    clearAllTimeouts();
+    setTimeLeft(initialTime); // Reset to initial time based on URL
+    setIsRunning(false);
+    setIsPaused(false);
+    setShowMessage(false);
+    setBackgroundWhite(false);
+    setMessage("");
+  };
 
   return (
     <div
       className={`flex flex-col items-center justify-center w-full min-h-screen px-4 transition-all duration-500 ${
         backgroundWhite
-          ? 'bg-white text-black'
-          : 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white'
+          ? "bg-white text-black"
+          : "bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white"
       }`}
     >
       {/* Mute Toggle Button */}
       {!showMessage && (
         <button
           onClick={toggleMute}
-          className='absolute transition-all top-6 right-6 hover:scale-110 p-3 rounded-full bg-opacity-20 bg-white backdrop-blur-sm hover:bg-opacity-30'
+          className="absolute p-3 transition-all bg-white rounded-full top-6 right-6 hover:scale-110 bg-opacity-20 backdrop-blur-sm hover:bg-opacity-30"
         >
           {isMuted ? (
-            <FaVolumeMute size={40} className='text-red-600' />
+            <FaVolumeMute size={40} className="text-red-600" />
           ) : (
-            <FaVolumeUp size={40} className='text-green-600' />
+            <FaVolumeUp size={40} className="text-green-600" />
           )}
         </button>
       )}
@@ -176,15 +166,15 @@ const Timer = () => {
       <AnimatePresence>
         {showMessage && (
           <motion.div
-            key='message'
+            key="message"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{
               opacity: [1, 1, 1],
               scale: [1, 1.1, 1],
               textShadow: [
-                '0 0 0px rgba(255,0,0,0)',
-                '0 0 20px rgba(255,0,0,0)',
-                '0 0 0px rgba(255,0,0,0)',
+                "0 0 0px rgba(255,0,0,0)",
+                "0 0 20px rgba(255,0,0,0)",
+                "0 0 0px rgba(255,0,0,0)",
               ],
             }}
             exit={{
@@ -195,9 +185,9 @@ const Timer = () => {
             transition={{
               duration: 2,
               repeat: 5,
-              repeatType: 'reverse',
+              repeatType: "reverse",
             }}
-            className='text-6xl font-extrabold text-center text-red-600 sm:text-8xl drop-shadow-lg'
+            className="text-6xl font-extrabold text-center text-red-600 sm:text-8xl drop-shadow-lg"
           >
             {message}
           </motion.div>
@@ -207,21 +197,24 @@ const Timer = () => {
       {/* Timer and Controls */}
       {!showMessage && (
         <motion.div
-          key='timer-container'
+          key="timer-container"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className='flex flex-col items-center'
+          className="flex flex-col items-center"
         >
-          <h2 className='mb-8 font-mono text-7xl sm:text-8xl md:text-9xl tracking-wider drop-shadow-2xl bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-300'>
+          <h1 className="mb-4 text-4xl font-bold tracking-widest text-transparent uppercase bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 drop-shadow-lg">
+            Dumb Shell Arts
+          </h1>
+          <h2 className="mb-8 font-mono tracking-wider text-transparent text-7xl sm:text-8xl md:text-9xl drop-shadow-2xl bg-clip-text bg-gradient-to-r from-white to-gray-300">
             {formatTime(timeLeft)}
           </h2>
 
           {/* Control Buttons */}
-          <div className='flex gap-4'>
+          <div className="flex gap-4">
             {!isRunning && !isPaused && (
               <button
                 onClick={startTimer}
-                className='p-4 transition bg-gradient-to-br from-green-500 to-green-600 rounded-full hover:from-green-600 hover:to-green-700 shadow-lg hover:shadow-green-500/30 transform hover:-translate-y-1'
+                className="p-4 transition transform rounded-full shadow-lg bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 hover:shadow-green-500/30 hover:-translate-y-1"
               >
                 <FaPlay size={32} />
               </button>
@@ -229,7 +222,7 @@ const Timer = () => {
             {isRunning && (
               <button
                 onClick={pauseTimer}
-                className='p-4 transition bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full hover:from-yellow-500 hover:to-yellow-600 shadow-lg hover:shadow-yellow-500/30 transform hover:-translate-y-1'
+                className="p-4 transition transform rounded-full shadow-lg bg-gradient-to-br from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 hover:shadow-yellow-500/30 hover:-translate-y-1"
               >
                 <FaPause size={32} />
               </button>
@@ -237,14 +230,14 @@ const Timer = () => {
             {isPaused && (
               <button
                 onClick={startTimer}
-                className='p-4 transition bg-gradient-to-br from-blue-400 to-blue-500 rounded-full hover:from-blue-500 hover:to-blue-600 shadow-lg hover:shadow-blue-500/30 transform hover:-translate-y-1'
+                className="p-4 transition transform rounded-full shadow-lg bg-gradient-to-br from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600 hover:shadow-blue-500/30 hover:-translate-y-1"
               >
                 <FaPlayCircle size={32} />
               </button>
             )}
             <button
               onClick={resetTimer}
-              className='p-4 transition bg-gradient-to-br from-red-500 to-red-600 rounded-full hover:from-red-600 hover:to-red-700 shadow-lg hover:shadow-red-500/30 transform hover:-translate-y-1'
+              className="p-4 transition transform rounded-full shadow-lg bg-gradient-to-br from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 hover:shadow-red-500/30 hover:-translate-y-1"
             >
               <FaRedo size={32} />
             </button>
@@ -252,7 +245,7 @@ const Timer = () => {
         </motion.div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default Timer
+export default Timer;

@@ -1,20 +1,20 @@
-# Presentation Timer ⏱️
+# Dumb Shell Arts Timer ⏱️
 
-A sleek and responsive countdown timer built using **React, Vite, Tailwind CSS, and Framer Motion**. This timer provides audio and visual alerts at key checkpoints (5 minutes, 3 minutes, and 1 minute remaining). Perfect for presentations, talks, or timed events!
+A sleek and responsive countdown timer built using **React, Vite, Tailwind CSS, and Framer Motion**. This timer provides audio and visual alerts at key checkpoints (2 minutes, 1 minute, and 30 seconds remaining). Perfect for presentations, talks, or timed events!
 
 ---
 
 ## **Live Demo 🌐**
 
 Use the app directly here:  
-👉 [Presentation Timer](https://rohithgoud30.github.io/PresentationTimer)
+👉 [Dumb Shell Arts Timer](https://dumb-shell-arts.vercel.app)
 
 ---
 
 ## **Features 🚀**
 
-- **Custom Countdown Timer**: Starts a countdown of 8 minutes with pause, reset, and resume controls.
-- **Audio Alerts**: Notifications at key checkpoints: 5 minutes, 3 minutes, and 1 minute remaining.
+- **Custom Countdown Timer**: Starts a countdown of 3 minutes with pause, reset, and resume controls.
+- **Audio Alerts**: Notifications at key checkpoints: 2 minutes, 1 minute, and 30 seconds remaining.
 - **Visual Alerts**: Full-screen messages and animations at key checkpoints.
 - **Mute Option**: Toggle audio on or off.
 - **Responsive Design**: Fully functional on desktop, tablet, and mobile devices.
@@ -82,9 +82,9 @@ Here's an overview of the project structure:
 PresentationTimer/
 ├── public/                # Static assets
 │   ├── 1_min_alert.mp3    # Audio for 1-minute alert
-│   ├── 3_min_alert.mp3    # Audio for 3-minute alert
-│   ├── 5_min_alert.mp3    # Audio for 5-minute alert
-│   ├── times_up.mp3       # Audio for Time's Up alert
+│   ├── 2_min_alert.mp3    # Audio for 2-minute alert
+│   ├── 30_sec_alert.mp3   # Audio for 30-second alert
+│   ├── time_is_up.mp3     # Audio for Time's Up alert
 │   └── vite.svg           # Vite logo
 ├── src/                   # Source files
 │   ├── components/        # Timer component
@@ -153,5 +153,5 @@ This project is licensed under the [MIT License](LICENSE).
 
 For questions or feedback, feel free to reach out:
 
-- **Name**: Rohith Goud Panjala  
+- **Name**: Rohith Goud Panjala
 - **GitHub**: [rohithgoud30](https://github.com/rohithgoud30)

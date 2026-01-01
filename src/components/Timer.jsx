@@ -22,10 +22,10 @@ const Timer = () => {
   const messageTimeoutRef = useRef(null);
 
   // Audio refs for alerts
-  const audio2Min = useRef(new Audio("./2_min_alert.mp3"));
-  const audio1Min = useRef(new Audio("./1_min_alert.mp3"));
-  const audio30Sec = useRef(new Audio("./30_sec_alert.mp3"));
-  const timesUpAudio = useRef(new Audio("./time_is_up.mp3")); // Final alert sound
+  const audio2Min = useRef(new Audio("/2_min_alert.mp3"));
+  const audio1Min = useRef(new Audio("/1_min_alert.mp3"));
+  const audio30Sec = useRef(new Audio("/30_sec_alert.mp3"));
+  const timesUpAudio = useRef(new Audio("/time_is_up.mp3")); // Final alert sound
 
   // Initialize audio mute state
   useEffect(() => {
